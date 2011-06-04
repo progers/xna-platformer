@@ -14,10 +14,38 @@ import java.util.Random;
 // A uniform grid of tiles with collections of gems and enemies.
 // The level owns the player and controls the game's win and lose
 // conditions as well as scoring.
-class Level {
+public class Level {
+
+  static class Layer {
+    Image[] layers = new Image[3];
+    float scrollRate;
+
+    Layer(int segmentIndex, float scrollRate) {
+      this.scrollRate = scrollRate;
+      for (int i = 0; i < layers.length; ++i) {
+        layers[i] = assetManager().getImage("Backgrounds/Layer" + segmentIndex + "_" + i + ".png");
+      }
+    }
+
+    void Draw(Surface surf, float cameraPosition) {
+      for (int i = 0; i <= EntityLayer; ++i) {
+        int segmentWidth = layers[0].width();
+
+        // Calculate which segments to draw and how much to offset them.
+        float x = cameraPosition * scrollRate;
+        int leftSegment = (int)Math.floor(x / segmentWidth);
+        int rightSegment = leftSegment + 1;
+        x = (x / segmentWidth - leftSegment) * -segmentWidth;
+
+        surf.drawImage(layers[leftSegment % layers.length], x, 0);
+        surf.drawImage(layers[rightSegment % layers.length], x + segmentWidth, 0);
+      }
+    }
+  }
+
   // Physical structure of the level.
   private Tile[][] tiles;
-  private Image[] layers;
+  private Layer[] layers;
   // The layer which entities are drawn on top of.
   private static final int EntityLayer = 2;
 
@@ -54,12 +82,11 @@ class Level {
   public float TimeRemaining() {
     return timeRemaining;
   }
-
   float timeRemaining;
 
   private static final int PointsPerSecond = 5;
-
   private Sound exitReachedSound;
+  private float cameraPosition;
 
   // Constructs a new level.
   // <param name="serviceProvider">
@@ -75,12 +102,10 @@ class Level {
 
     // Load background layer textures. For now, all levels must
     // use the same backgrounds and only use the left-most part of them.
-    layers = new Image[3];
-    for (int i = 0; i < layers.length; ++i) {
-      // Choose a random segment if each background layer for level variety.
-      int segmentIndex = levelIndex;
-      layers[i] = assetManager().getImage("Backgrounds/Layer" + i + "_" + segmentIndex + ".png");
-    }
+    layers = new Layer[3];
+    layers[0] = new Layer(0, 0.2f);
+    layers[1] = new Layer(1, 0.5f);
+    layers[2] = new Layer(2, 0.8f);
 
     // Load sounds.
     exitReachedSound = assetManager().getSound("Sounds/ExitReached");
@@ -292,7 +317,7 @@ class Level {
     } else {
       timeRemaining -= gameTime;
       Player().Update(gameTime, keyboardState, gamePadState, touchState, accelState, orientation);
-      UpdateGems(gameTime);
+      UpdateGems(timeRemaining);
 
       // Falling off the bottom of the level kills the player.
       if (Player().BoundingRectangle().Top >= Height() * Tile.Height)
@@ -375,8 +400,12 @@ class Level {
   // Draw everything in the level from background to foreground.
   public void Draw(float gameTime, Surface surf) {
     for (int i = 0; i <= EntityLayer; ++i)
-      surf.drawImage(layers[i], 0, 0);
+      layers[i].Draw(surf, cameraPosition);
 
+    ScrollCamera();
+
+    surf.save();
+    surf.translate(-cameraPosition, 0);
     DrawTiles(surf);
 
     for (Gem gem : gems)
@@ -387,8 +416,30 @@ class Level {
     for (Enemy enemy : enemies)
       enemy.Draw(gameTime, surf);
 
-    for (int i = EntityLayer + 1; i < layers.length; ++i)
-      surf.drawImage(layers[i], 0, 0);
+//    for (int i = EntityLayer + 1; i < layers.length; ++i)
+//      surf.drawImage(layers[i], 0, 0);
+
+    surf.restore();
+  }
+
+  private void ScrollCamera() {
+    final float ViewMargin = 0.35f;
+
+    // Calculate the edges of the screen.
+    float marginWidth = graphics().width() * ViewMargin;
+    float marginLeft = cameraPosition + marginWidth;
+    float marginRight = cameraPosition + graphics().width() - marginWidth;
+
+    // Calculate how far to scroll when the player is near the edges of the screen.
+    float cameraMovement = 0.0f;
+    if (Player().Position().X < marginLeft)
+      cameraMovement = Player().Position().X - marginLeft;
+    else if (Player().Position().X > marginRight)
+      cameraMovement = Player().Position().X - marginRight;
+
+    // Update the camera position, but prevent scrolling off the ends of the level.
+    float maxCameraPosition = Tile.Width * Width() - graphics().width();
+    cameraPosition = MathHelper.Clamp(cameraPosition + cameraMovement, 0.0f, maxCameraPosition);
   }
 
   // Draws each tile in the level.
