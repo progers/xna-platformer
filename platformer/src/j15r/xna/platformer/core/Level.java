@@ -1,7 +1,7 @@
 package j15r.xna.platformer.core;
 
-import static forplay.core.ForPlay.assetManager;
-import static forplay.core.ForPlay.json;
+import static forplay.core.ForPlay.*;
+
 import forplay.core.Image;
 import forplay.core.Json;
 import forplay.core.Sound;

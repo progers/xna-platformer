@@ -77,8 +77,6 @@ class Gem {
 
   // Draws a gem in the appropriate color.
   public void Draw(float gameTime, Surface surf) {
-    // surf.Draw(texture, Position(), null, Color, 0.0f, origin, 1.0f,
-    // SpriteEffects.None, 0.0f);
     surf.drawImage(texture, Position().X - origin.X, Position().Y - origin.X);
   }
 }

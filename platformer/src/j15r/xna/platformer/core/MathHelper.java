@@ -2,8 +2,13 @@ package j15r.xna.platformer.core;
 
 public class MathHelper {
 
-  public static float Clamp(float f, float g, float h) {
-    // TODO Auto-generated method stub
-    return 0;
+  public static float Clamp(float x, float min, float max) {
+    if (x < min) {
+      return min;
+    }
+    if (x > max) {
+      return max;
+    }
+    return x;
   }
 }

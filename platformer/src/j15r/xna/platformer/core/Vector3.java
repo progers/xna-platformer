@@ -14,6 +14,9 @@ public class Vector3 {
   }
 
   public void Normalize() {
-    // TODO Auto-generated method stub
+    float len = (float) Math.sqrt(X * X + Y * Y + Z * Z);
+    X /= len;
+    Y /= len;
+    Z /= len;
   }
 }

@@ -36,7 +36,7 @@ class Animation {
   // Gets the width of a frame in the animation.
   public int FrameWidth() {
     // Assume square frames.
-    return Texture().width();
+    return Texture().height();
   }
 
   // Gets the height of a frame in the animation.

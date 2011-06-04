@@ -1,7 +1,6 @@
 package j15r.xna.platformer.core;
 
 import static forplay.core.ForPlay.assetManager;
-
 import forplay.core.Keyboard;
 import forplay.core.Sound;
 import forplay.core.Surface;
@@ -70,8 +69,8 @@ class Player {
   private static final float JumpControlPower = 0.14f;
 
   // Input configuration
-  private static final float MoveStickScale = 1.0f;
-  private static final float AccelerometerScale = 1.5f;
+//  private static final float MoveStickScale = 1.0f;
+//  private static final float AccelerometerScale = 1.5f;
   private static final Buttons JumpButton = Buttons.A;
 
   // Gets whether or not the player's feet are on the ground.
@@ -112,8 +111,7 @@ class Player {
     idleAnimation = new Animation(assetManager().getImage("Sprites/Player/Idle.png"), 0.1f, true);
     runAnimation = new Animation(assetManager().getImage("Sprites/Player/Run.png"), 0.1f, true);
     jumpAnimation = new Animation(assetManager().getImage("Sprites/Player/Jump.png"), 0.1f, false);
-    celebrateAnimation =
-        new Animation(assetManager().getImage("Sprites/Player/Celebrate.png"), 0.1f, false);
+    celebrateAnimation = new Animation(assetManager().getImage("Sprites/Player/Celebrate.png"), 0.1f, false);
     dieAnimation = new Animation(assetManager().getImage("Sprites/Player/Die.png"), 0.1f, false);
 
     // Calculate bounds within texture size.
@@ -169,30 +167,28 @@ class Player {
   // Gets player horizontal movement and jump commands from input.
   private void GetInput(KeyboardState keyboardState, GamePadState gamePadState,
       TouchCollection touchState, AccelerometerState accelState, DisplayOrientation orientation) {
-    // Get analog horizontal movement.
-    movement = gamePadState.ThumbSticks().Left().X * MoveStickScale;
-
-    // Ignore small movements to prevent running in place.
-    if (Math.abs(movement) < 0.5f)
-      movement = 0.0f;
-
-    // Move the player with accelerometer
-    if (Math.abs(accelState.Acceleration().Y) > 0.10f) {
-      // set our movement speed
-      movement = MathHelper.Clamp(-accelState.Acceleration().Y * AccelerometerScale, -1f, 1f);
-
-      // if we're in the LandscapeLeft orientation, we must reverse our movement
-      if (orientation == DisplayOrientation.LandscapeRight)
-        movement = -movement;
-    }
+//    // Get analog horizontal movement.
+//    movement = gamePadState.ThumbSticks().Left().X * MoveStickScale;
+//
+//    // Ignore small movements to prevent running in place.
+//    if (Math.abs(movement) < 0.5f)
+//      movement = 0.0f;
+//
+//    // Move the player with accelerometer
+//    if (Math.abs(accelState.Acceleration().Y) > 0.10f) {
+//      // set our movement speed
+//      movement = MathHelper.Clamp(-accelState.Acceleration().Y * AccelerometerScale, -1f, 1f);
+//
+//      // if we're in the LandscapeLeft orientation, we must reverse our movement
+//      if (orientation == DisplayOrientation.LandscapeRight)
+//        movement = -movement;
+//    }
 
     // If any digital horizontal movement input is found, override the analog
     // movement.
-    if (gamePadState.IsButtonDown(Buttons.DPadLeft) || keyboardState.IsKeyDown(Keyboard.KEY_LEFT)
-        || keyboardState.IsKeyDown('A')) {
+    if (gamePadState.IsButtonDown(Buttons.DPadLeft) || keyboardState.IsKeyDown(Keyboard.KEY_LEFT) || keyboardState.IsKeyDown('A')) {
       movement = -1.0f;
-    } else if (gamePadState.IsButtonDown(Buttons.DPadRight)
-        || keyboardState.IsKeyDown(Keyboard.KEY_RIGHT) || keyboardState.IsKeyDown('D')) {
+    } else if (gamePadState.IsButtonDown(Buttons.DPadRight) || keyboardState.IsKeyDown(Keyboard.KEY_RIGHT) || keyboardState.IsKeyDown('D')) {
       movement = 1.0f;
     }
 
@@ -212,8 +208,7 @@ class Player {
     // Base velocity is a combination of horizontal movement control and
     // acceleration downward due to gravity.
     velocity.X += movement * MoveAcceleration * elapsed;
-    velocity.Y =
-        MathHelper.Clamp(velocity.Y + GravityAcceleration * elapsed, -MaxFallSpeed, MaxFallSpeed);
+    velocity.Y = MathHelper.Clamp(velocity.Y + GravityAcceleration * elapsed, -MaxFallSpeed, MaxFallSpeed);
 
     velocity.Y = DoJump(velocity.Y, gameTime);
 
@@ -227,7 +222,8 @@ class Player {
     velocity.X = MathHelper.Clamp(velocity.X, -MaxMoveSpeed, MaxMoveSpeed);
 
     // Apply velocity.
-    setPosition(Position().add(velocity.mul(elapsed)));
+    Vector2 amt = velocity.mul(elapsed);
+    setPosition(Position().add(amt));
     setPosition(new Vector2((float) Math.round(Position().X), (float) Math.round(Position().Y)));
 
     // If the player is now colliding with the level, separate them.

@@ -60,7 +60,7 @@ class Rectangle {
   }
 
   public static Vector2 GetBottomCenter(Rectangle r) {
-    return new Vector2(r.Left + r.Width / 2, r.Height);
+    return new Vector2(r.Left + r.Width / 2, r.Top + r.Height);
   }
 
   public Vector2 Center() {

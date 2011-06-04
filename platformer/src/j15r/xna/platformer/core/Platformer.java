@@ -1,9 +1,7 @@
 package j15r.xna.platformer.core;
 
-import static forplay.core.ForPlay.assetManager;
-import static forplay.core.ForPlay.currentTime;
-import static forplay.core.ForPlay.graphics;
-import static forplay.core.ForPlay.log;
+import static forplay.core.ForPlay.*;
+
 import forplay.core.Game;
 import forplay.core.Image;
 import forplay.core.ResourceCallback;
@@ -51,6 +49,9 @@ public class Platformer implements Game {
   // all of your content.
   @Override
   public void init() {
+    keyboardState = KeyboardState.GetState();
+    keyboard().setListener(keyboardState);
+
     startTime = currentTime();
     graphics().setSize(800, 480);
 
@@ -77,13 +78,13 @@ public class Platformer implements Game {
     if (level == null) {
       return;
     }
-    float gameTime = (float) ((currentTime() - startTime) / 1000.0);
+
     // Handle polling for our input and handling high-level input
     HandleInput();
 
     // update our level, passing down the GameTime along with all of our input
     // states
-    level.Update(gameTime, keyboardState, gamePadState, touchState, accelerometerState,
+    level.Update(delta / 1000, keyboardState, gamePadState, touchState, accelerometerState,
         DisplayOrientation.LandscapeRight);
   }
 
@@ -149,11 +150,11 @@ public class Platformer implements Game {
     if (level == null) {
       return;
     }
-    float gameTime = (float) ((currentTime() - startTime) / 1000.0);
+
     Surface surf = layer.surface();
     surf.clear();
-
-    level.Draw(gameTime, surf);
+    // TODO: Change this to alpha
+    level.Draw(17.0f / 1000, surf);
 
     DrawHud();
   }
@@ -205,7 +206,7 @@ public class Platformer implements Game {
 
   @Override
   public int updateRate() {
-    return 33;
+    return 17;
   }
 
   // TODO: font

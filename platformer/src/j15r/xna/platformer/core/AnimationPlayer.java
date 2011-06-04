@@ -62,7 +62,9 @@ public class AnimationPlayer {
             Animation().Texture().height(), Animation().Texture().height());
 
     // Draw the current frame.
-    surf.drawImage(Animation().Texture(), position.X - Origin().X, position.Y - Origin().Y,
-        source.Width, source.Height, source.Left, source.Top, source.Width, source.Height);
+    float startX = flipH ? (position.X + Origin().X) : (position.X - Origin().X);
+    float width = flipH ? -source.Width : source.Width;
+    surf.drawImage(Animation().Texture(), startX, position.Y - Origin().Y,
+        width, source.Height, source.Left, source.Top, source.Width, source.Height);
   }
 }

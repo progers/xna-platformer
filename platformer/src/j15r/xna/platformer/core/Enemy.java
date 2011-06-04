@@ -42,7 +42,7 @@ class Enemy {
   // Animations
   private Animation runAnimation;
   private Animation idleAnimation;
-  private AnimationPlayer sprite;
+  private AnimationPlayer sprite = new AnimationPlayer();
 
   // The direction this enemy is facing and moving along the X axis.
   private FaceDirection direction = FaceDirection.Left;
