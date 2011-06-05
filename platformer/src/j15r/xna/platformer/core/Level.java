@@ -416,9 +416,6 @@ public class Level {
     for (Enemy enemy : enemies)
       enemy.Draw(gameTime, surf);
 
-//    for (int i = EntityLayer + 1; i < layers.length; ++i)
-//      surf.drawImage(layers[i], 0, 0);
-
     surf.restore();
   }
 
