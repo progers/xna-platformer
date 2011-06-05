@@ -74,11 +74,11 @@ class Rectangle {
   }
 
   public boolean Intersects(Rectangle r) {
-    return
-      ((r.Left >= Left && r.Left < Right()) ||
-       (r.Right() >= Left && r.Right() < Right())) &&
-      ((r.Top >= Top && r.Top < Bottom()) ||
-       (r.Bottom() >= Top && r.Bottom() < Bottom()))
-    ;
+    return !(
+        Left > r.Right()  ||
+        Top > r.Bottom() ||
+        Right() < r.Left ||
+        Bottom() < r.Top
+    );
   }
 }
