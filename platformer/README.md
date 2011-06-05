@@ -8,3 +8,5 @@ License" (see the .rtf file in this directory).
 The code's a real mess, as I ported it from C# to Java in a matter of a few
 hours, but it makes a nice proof-of-concept.
 
+Demo link: http://xna-platformer.appspot.com/Platformer.html
+
