@@ -1,21 +1,23 @@
 package j15r.xna.platformer.core;
 
-import forplay.core.Surface;
 import static forplay.core.ForPlay.assetManager;
-
-// Facing direction along the X axis.
-enum FaceDirection {
-  Left(-1), Right(1);
-
-  float value;
-
-  FaceDirection(float value) {
-    this.value = value;
-  }
-}
+import forplay.core.AssetWatcher;
+import forplay.core.Surface;
 
 // A monster who is impeding the progress of our fearless adventurer.
 class Enemy {
+
+  static void loadAssets(AssetWatcher watcher) {
+    watcher.add(assetManager().getImage("Sprites/MonsterA/Run.png"));
+    watcher.add(assetManager().getImage("Sprites/MonsterA/Idle.png"));
+    watcher.add(assetManager().getImage("Sprites/MonsterB/Run.png"));
+    watcher.add(assetManager().getImage("Sprites/MonsterB/Idle.png"));
+    watcher.add(assetManager().getImage("Sprites/MonsterC/Run.png"));
+    watcher.add(assetManager().getImage("Sprites/MonsterC/Idle.png"));
+    watcher.add(assetManager().getImage("Sprites/MonsterD/Run.png"));
+    watcher.add(assetManager().getImage("Sprites/MonsterD/Idle.png"));
+  }
+
   public Level Level() {
     return level;
   }
@@ -39,9 +41,10 @@ class Enemy {
     return new Rectangle(left, top, localBounds.Width, localBounds.Height);
   }
 
-  // Animations
   private Animation runAnimation;
   private Animation idleAnimation;
+
+  // Animations
   private AnimationPlayer sprite = new AnimationPlayer();
 
   // The direction this enemy is facing and moving along the X axis.
@@ -122,5 +125,16 @@ class Enemy {
     // Draw facing the way the enemy is moving.
     boolean flip = direction.value > 0;
     sprite.Draw(gameTime, surf, Position(), flip);
+  }
+}
+
+// Facing direction along the X axis.
+enum FaceDirection {
+  Left(-1), Right(1);
+
+  float value;
+
+  FaceDirection(float value) {
+    this.value = value;
   }
 }

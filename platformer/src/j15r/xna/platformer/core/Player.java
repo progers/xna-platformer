@@ -1,18 +1,30 @@
 package j15r.xna.platformer.core;
 
 import static forplay.core.ForPlay.assetManager;
+import forplay.core.AssetWatcher;
 import forplay.core.Keyboard;
 import forplay.core.Sound;
 import forplay.core.Surface;
 
 // Our fearless adventurer!
 class Player {
+
+  static void loadAssets(AssetWatcher watcher) {
+    // Load animated textures.
+    watcher.add(assetManager().getImage("Sprites/Player/Idle.png"));
+    watcher.add(assetManager().getImage("Sprites/Player/Run.png"));
+    watcher.add(assetManager().getImage("Sprites/Player/Jump.png"));
+    watcher.add(assetManager().getImage("Sprites/Player/Celebrate.png"));
+    watcher.add(assetManager().getImage("Sprites/Player/Die.png"));
+  }
+
   // Animations
-  private Animation idleAnimation;
-  private Animation runAnimation;
-  private Animation jumpAnimation;
-  private Animation celebrateAnimation;
-  private Animation dieAnimation;
+  private static Animation idleAnimation;
+  private static Animation runAnimation;
+  private static Animation jumpAnimation;
+  private static Animation celebrateAnimation;
+  private static Animation dieAnimation;
+
   private AnimationPlayer sprite = new AnimationPlayer();
 
   // Sounds
@@ -107,7 +119,6 @@ class Player {
 
   // Loads the player sprite sheet and sounds.
   public void LoadContent() {
-    // Load animated textures.
     idleAnimation = new Animation(assetManager().getImage("Sprites/Player/Idle.png"), 0.1f, true);
     runAnimation = new Animation(assetManager().getImage("Sprites/Player/Run.png"), 0.1f, true);
     jumpAnimation = new Animation(assetManager().getImage("Sprites/Player/Jump.png"), 0.1f, false);

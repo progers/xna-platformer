@@ -1,14 +1,20 @@
 package j15r.xna.platformer.core;
 
 import static forplay.core.ForPlay.assetManager;
+import forplay.core.AssetWatcher;
 import forplay.core.Image;
 import forplay.core.Sound;
 import forplay.core.Surface;
 
 // A valuable item the player can collect.
 class Gem {
+
+  static void loadAssets(AssetWatcher watcher) {
+    // Load animated textures.
+    watcher.add(assetManager().getImage("Sprites/Gem.png"));
+  }
+
   private Image texture;
-  private Vector2 origin;
   private Sound collectedSound;
 
   public static final int PointValue = 30;
@@ -45,7 +51,6 @@ class Gem {
   // Loads the gem texture and collected sound.
   public void LoadContent() {
     texture = assetManager().getImage("Sprites/Gem.png");
-    origin = new Vector2(texture.width() / 2.0f, texture.height() / 2.0f);
     collectedSound = assetManager().getSound("Sounds/GemCollected");
   }
 
@@ -77,6 +82,6 @@ class Gem {
 
   // Draws a gem in the appropriate color.
   public void Draw(float gameTime, Surface surf) {
-    surf.drawImage(texture, Position().X - origin.X, Position().Y - origin.X);
+    surf.drawImage(texture, Position().X - texture.width() / 2.0f, Position().Y - texture.height() / 2.0f);
   }
 }

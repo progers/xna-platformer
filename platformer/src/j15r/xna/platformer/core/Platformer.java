@@ -2,6 +2,7 @@ package j15r.xna.platformer.core;
 
 import static forplay.core.ForPlay.*;
 
+import forplay.core.AssetWatcher;
 import forplay.core.Game;
 import forplay.core.Image;
 import forplay.core.ResourceCallback;
@@ -39,11 +40,12 @@ public class Platformer implements Game {
   // loading.
   private static final int numberOfLevels = 3;
   private SurfaceLayer layer;
-  private double startTime;
 
   public Platformer() {
     Accelerometer.Initialize();
   }
+
+  private AssetWatcher watcher;
 
   // LoadContent will be called once per game and is the place to load
   // all of your content.
@@ -52,7 +54,6 @@ public class Platformer implements Game {
     keyboardState = KeyboardState.GetState();
     keyboard().setListener(keyboardState);
 
-    startTime = currentTime();
     graphics().setSize(800, 480);
 
     // Load fonts
@@ -67,7 +68,21 @@ public class Platformer implements Game {
 
     assetManager().getSound("Sounds/Music").play();
 
-    LoadNextLevel();
+    watcher = new AssetWatcher(new AssetWatcher.Listener() {
+      @Override
+      public void error(Throwable e) {
+        log().error(e.getMessage());
+      }
+
+      @Override
+      public void done() {
+        LoadNextLevel();
+      }
+    });
+    Player.loadAssets(watcher);
+    Enemy.loadAssets(watcher);
+    Gem.loadAssets(watcher);
+    watcher.start();
   }
 
   // Allows the game to run logic such as updating the world,
