@@ -20,15 +20,11 @@ public class KeyboardState implements Keyboard.Listener {
 
   @Override
   public void onKeyDown(int keyCode) {
-    if (keyCode < 256) {
-      keys[keyCode] = true;
-    }
+    keys[keyCode] = true;
   }
 
   @Override
   public void onKeyUp(int keyCode) {
-    if (keyCode < 256) {
-      keys[keyCode] = false;
-    }
+    keys[keyCode] = false;
   }
 }
